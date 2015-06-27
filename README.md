@@ -1,7 +1,7 @@
 # multiwii-tricopter-mega
 copter club's sensor bristling tricopter
 
-Find enclosed (1) working set of code for the copter club's tricopter. 
+Here's the Multiwii code for our tricopter.
 It's already configured but there are no major changes from Multiwii 2.4
 
 Notes on the physical copter: 
