@@ -1045,7 +1045,7 @@ Also note, that maqgnetic declination changes with time, so recheck your value e
       SERVO7  = pin 7   (elevator for fixed wing)
       SERVO8  = pin 8   (motor for fixed wing)       */ 
 
-    #define MEGA_HW_PWM_SERVOS
+    //#define MEGA_HW_PWM_SERVOS
  
     /* HW PWM Servo outputs for 32u4 NanoWii, MicroWii etc. - works with either the variable SERVO_RFR_RATE or
      * one of the 3 fixed servo.refresh.rates *
