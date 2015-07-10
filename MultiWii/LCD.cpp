@@ -504,7 +504,7 @@ void ETPP_barGraph(byte num, int val) { // num chars in graph; percent as 1 to 1
 #endif //LCD_ETPP
 
 #if defined(LCD_LCD03) // LCD_LCD03
-#define LCD_LCD03_ADDRESS 0x3F27 // used to be 0x63
+#define LCD_LCD03_ADDRESS 0x63
 // *********************
 // I2C LCD03 primitives
 // *********************

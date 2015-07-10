@@ -93,8 +93,8 @@ const char boxnames[] PROGMEM = // names for dynamic generation of config GUI
   "OSD SW;"
 #endif
 #if GPS
-  "GPS MISSION;"
-  "GPS LAND;"
+  "MISSION;"
+  "LAND;"
 #endif
   ;
 
