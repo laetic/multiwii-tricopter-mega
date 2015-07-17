@@ -451,6 +451,9 @@ void evaluateCommand(uint8_t c) {
       #if defined(OSD_SWITCH)
         if(rcOptions[BOXOSD]) tmp |= 1<<BOXOSD;
       #endif
+      #if SONAR
+		if (f.SONAR_MODE) tmp |= 1 << BOXSONAR;
+      #endif
       if(f.ARMED) tmp |= 1<<BOXARM;
       st.flag             = tmp;
       st.set              = global_conf.currentSet;

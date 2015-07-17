@@ -1242,6 +1242,17 @@
   #define MAG_ORIENTATION(X, Y, Z)  {imu.magADC[ROLL]  =  X; imu.magADC[PITCH]  =  Y; imu.magADC[YAW]  = -Z;}
 #endif
 
+#if defined(RCTIMER_CRIUS_SE_v2_0)
+#define MPU6050
+#define HMC5883
+#define MS561101BA
+#define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -X; imu.accADC[PITCH]  = -Y; imu.accADC[YAW]  =  Z;}
+#define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] =  Y; imu.gyroADC[PITCH] = -X; imu.gyroADC[YAW] = -Z;}
+#define MAG_ORIENTATION(X, Y, Z)  {imu.magADC[ROLL]  =  X; imu.magADC[PITCH]  =  Y; imu.magADC[YAW]  = -Z;}
+
+//#define MS561101BA_ADDRESS 0x76
+#endif
+
 #if defined(BOARD_PROTO_1)
   #define MPU6050
   #define HMC5883
@@ -1678,7 +1689,7 @@
   #define NAVCAP 0
 #endif
 
-#if defined(SRF02) || defined(SRF08) || defined(SRF10) || defined(SRC235) || defined(I2C_GPS_SONAR)
+#if defined(SRF02) || defined(SRF08) || defined(SRF10) || defined(SRC235) || defined(I2C_GPS_SONAR) || defined(SONAR_GENERIC_ECHOPULSE)
   #define SONAR 1
 #else
   #define SONAR 0
@@ -1999,5 +2010,21 @@
     defined( ITG3200_LPF_20HZ)  || defined( ITG3200_LPF_10HZ)
   #error "you use one feature that is no longer supported or has undergone a name change"
 #endif
+
+#pragma region GENERIC SONAR SUPPORT
+#if defined(SONAR_GENERIC_ECHOPULSE)
+#define SONAR_GEP_TriggerPin             SONAR_GENERIC_TRIGGER_PIN
+#define SONAR_GEP_TriggerPin_PINMODE_OUT pinMode(SONAR_GEP_TriggerPin,OUTPUT);
+#define SONAR_GEP_TriggerPin_PIN_HIGH    PORTB |= 1<<6;
+#define SONAR_GEP_TriggerPin_PIN_LOW     PORTB &= ~(1<<6);
+#define SONAR_GEP_EchoPin                SONAR_GENERIC_ECHO_PIN
+#define SONAR_GEP_EchoPin_PINMODE_IN     pinMode(SONAR_GEP_EchoPin,INPUT);
+#define SONAR_GEP_EchoPin_PCINT          PCINT5
+#define SONAR_GEP_EchoPin_PCICR          PCICR |= (1<<PCIE0); // PCINT 0-7 belong to PCIE0
+#define SONAR_GEP_EchoPin_PCMSK          PCMSK0 = (1<<SONAR_GEP_EchoPin_PCINT); // Mask Pin PCINT5 - all other PIns PCINT0-7 are not allowed to create interrupts!
+#define SONAR_GEP_EchoPin_PCINT_vect     PCINT0_vect  // PCINT0-7 belog PCINT0_vect
+#define SONAR_GEP_EchoPin_PIN            PINB  // PCINT0-7 belong to PINB
+#endif
+#pragma endregion
 
 #endif /* DEF_H_ */

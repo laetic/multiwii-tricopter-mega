@@ -43,59 +43,62 @@ const char pidnames[] PROGMEM =
   "VEL;"
 ;
 
-const char boxnames[] PROGMEM = // names for dynamic generation of config GUI
-  "ARM;"
-  #if ACC
-    "ANGLE;"
-    "HORIZON;"
-  #endif
-  #if BARO && (!defined(SUPPRESS_BARO_ALTHOLD))
-    "BARO;"
-  #endif
-  #ifdef VARIOMETER
-    "VARIO;"
-  #endif
-  "MAG;"
-  #if defined(HEADFREE)
-  "HEADFREE;"
-  "HEADADJ;"  
+const char boxnames [] PROGMEM = // names for dynamic generation of config GUI
+"ARM;"
+#if ACC
+"ANGLE;"
+"HORIZON;"
+#endif
+#if BARO && (!defined(SUPPRESS_BARO_ALTHOLD))
+"BARO;"
+#endif
+#ifdef VARIOMETER
+"VARIO;"
+#endif
+"MAG;"
+#if defined(HEADFREE)
+"HEADFREE;"
+"HEADADJ;"  
 #endif
 #if defined(SERVO_TILT) || defined(GIMBAL)|| defined(SERVO_MIX_TILT)
-  "CAMSTAB;"
+"CAMSTAB;"
 #endif
 #if defined(CAMTRIG)
-  "CAMTRIG;"
+"CAMTRIG;"
 #endif
 #if GPS
-  "GPS HOME;"
-  "GPS HOLD;"
+"GPS HOME;"
+"GPS HOLD;"
 #endif
 #if defined(FIXEDWING) || defined(HELICOPTER)
-  "PASSTHRU;"
+"PASSTHRU;"
 #endif
 #if defined(BUZZER)
-  "BEEPER;"
+"BEEPER;"
 #endif
 #if defined(LED_FLASHER)
-  "LEDMAX;"
-  "LEDLOW;"
+"LEDMAX;"
+"LEDLOW;"
 #endif
 #if defined(LANDING_LIGHTS_DDR)
-  "LLIGHTS;"
+"LLIGHTS;"
 #endif
 #ifdef INFLIGHT_ACC_CALIBRATION
-  "CALIB;"
+"CALIB;"
 #endif
 #ifdef GOVERNOR_P
-  "GOVERNOR;"
+"GOVERNOR;"
 #endif
 #ifdef OSD_SWITCH
-  "OSD SW;"
+"OSD SW;"
 #endif
 #if GPS
-  "MISSION;"
-  "LAND;"
+"MISSION;"
+"LAND;"
 #endif
+#if SONAR
+"SONAR;"
+#endif 
   ;
 
 const uint8_t boxids[] PROGMEM = {// permanent IDs associated to boxes. This way, you can rely on an ID number to identify a BOX function.
@@ -151,6 +154,9 @@ const uint8_t boxids[] PROGMEM = {// permanent IDs associated to boxes. This way
   20, //"MISSION;"
   21, //"LAND;"
 #endif
+#if SONAR
+  22, //"SONAR;"
+#endif
   };
 
 
@@ -160,6 +166,9 @@ uint16_t cycleTime = 0;     // this is the number in micro second to achieve a f
 uint16_t calibratingA = 0;  // the calibration is done in the main loop. Calibrating decreases at each cycle down to 0, then we enter in a normal mode.
 uint16_t calibratingB = 0;  // baro calibration = get new ground pressure value
 uint16_t calibratingG;
+#if SONAR
+uint16_t calibratingS = 0;
+#endif
 int16_t  magHold,headFreeModeHold; // [-180;+180]
 uint8_t  vbatMin = VBATNOMINAL;  // lowest battery voltage in 0.1V steps
 uint8_t  rcOptions[CHECKBOXITEMS];
@@ -703,6 +712,9 @@ void setup() {
   #endif
   calibratingG = 512;
   calibratingB = 200;  // 10 seconds init_delay + 200 * 25 ms = 15 seconds before ground pressure settles
+#if SONAR
+  calibratingS = 200;
+#endif
   #if defined(POWERMETER)
     for(uint8_t j=0; j<=PMOTOR_SUM; j++) pMeter[j]=0;
   #endif
@@ -776,6 +788,9 @@ void go_arm() {
         #if BARO
           calibratingB = 10; // calibrate baro to new ground level (10 * 25 ms = ~250 ms non blocking)
         #endif
+		#if SONAR
+		  calibratingS = 10;
+		#endif
       #endif
       #ifdef LCD_TELEMETRY // reset some values when arming
         #if BARO
@@ -924,6 +939,9 @@ void loop () {
           #if BARO
             calibratingB=10;  // calibrate baro to new ground level (10 * 25 ms = ~250 ms non blocking)
           #endif
+		  #if SONAR
+			calibratingS = 10;
+		  #endif
         }
         #if defined(INFLIGHT_ACC_CALIBRATION)  
          else if (rcSticks == THR_LO + YAW_LO + PIT_HI + ROL_HI) {    // Inflight ACC calibration START/STOP
@@ -1073,6 +1091,29 @@ void loop () {
     #if !defined(GPS_LED_INDICATOR)
       if (f.ANGLE_MODE || f.HORIZON_MODE) {STABLEPIN_ON;} else {STABLEPIN_OFF;}
     #endif
+
+#if SONAR
+	  if (rcOptions[BOXSONAR]) {
+		  if (f.SONAR_MODE == 0) {
+			  f.SONAR_MODE = 1;
+
+			  AltHold = alt.EstAlt;
+
+#if defined(ALT_HOLD_THROTTLE_MIDPOINT)
+			  initialThrottleHold = ALT_HOLD_THROTTLE_MIDPOINT;
+#else
+			  initialThrottleHold = rcCommand[THROTTLE];
+#endif
+
+			  errorAltitudeI = 0;
+			  BaroPID = 0;
+			  f.THROTTLE_IGNORED = 0;
+		  }
+	  }
+	  else {
+		  f.SONAR_MODE = 0;
+	  }
+#endif
 
     #if BARO
       #if (!defined(SUPPRESS_BARO_ALTHOLD))
@@ -1243,12 +1284,18 @@ void loop () {
         #if BARO
           if (Baro_update() != 0) break; // for MS baro: I2C set and get: 220 us  -  presure and temperature computation 160 us
         #endif
-      case 2:
+	  case 2:
+	    taskOrder++;
+		#if SONAR
+		  Sonar_update(); //debug[2] = sonarAlt;
+	    #endif
+		break;
+      case 3:
         taskOrder++;
-        #if BARO
+        #if BARO || SONAR
           if (getEstimatedAltitude() != 0) break; // 280 us
         #endif    
-      case 3:
+      case 4:
         taskOrder++;
         #if GPS
           if (GPS_Compute() != 0) break;  // performs computation on new frame only if present
@@ -1256,11 +1303,9 @@ void loop () {
           if (GPS_NewData() != 0) break;  // 160 us with no new data / much more with new data 
           #endif
         #endif
-      case 4:
+      case 5:
         taskOrder=0;
-        #if SONAR
-          Sonar_update(); //debug[2] = sonarAlt;
-        #endif
+        
         #ifdef LANDING_LIGHTS_DDR
           auto_switch_landing_lights();
         #endif

@@ -83,6 +83,9 @@ enum box {
     BOXGPSNAV,
     BOXLAND,
   #endif
+  #if SONAR
+	BOXSONAR,
+  #endif
   CHECKBOXITEMS
 };
 
@@ -145,6 +148,9 @@ typedef struct {
   uint8_t GPS_head_set: 1;           // it is 1 if the navigation engine got commands to control heading (SET_POI or SET_HEAD) CLEAR_HEAD will zero it
   uint8_t LAND_COMPLETED: 1;
   uint8_t LAND_IN_PROGRESS: 1;
+#endif
+#if SONAR
+  uint8_t SONAR_MODE : 1;
 #endif
 } flags_struct_t;
 
