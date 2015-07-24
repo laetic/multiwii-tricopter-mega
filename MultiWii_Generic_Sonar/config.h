@@ -235,7 +235,7 @@
    /********************************    ARM/DISARM    *********************************/
    /* optionally disable stick combinations to arm/disarm the motors.
      * In most cases one of the two options to arm/disarm via TX stick is sufficient */
-    //#define ALLOW_ARM_DISARM_VIA_TX_YAW
+    #define ALLOW_ARM_DISARM_VIA_TX_YAW
     //#define ALLOW_ARM_DISARM_VIA_TX_ROLL
 
     /********************************    SERVOS      *********************************/
@@ -422,7 +422,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
     /*********************************    Aux 2 Pin     ***********************************/
       /* possibility to use PIN8 or PIN12 as the AUX2 RC input (only one, not both)
          it deactivates in this case the POWER PIN (pin 12) or the BUZZER PIN (pin 8) */
-      //#define RCAUXPIN8
+      #define RCAUXPIN8
       //#define RCAUXPIN12
 
 
@@ -665,7 +665,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
        in NMEA mode the GPS must be configured to output GGA and RMC NMEA sentences (which is generally the default conf for most GPS devices)
        at least 5Hz update rate. uncomment the first line to select the GPS serial port of the arduino */
        
-    //#define GPS_SERIAL 2         // should be 2 for flyduino v2. It's the serial port number on arduino MEGA
+    #define GPS_SERIAL 2         // should be 2 for flyduino v2. It's the serial port number on arduino MEGA
                                    // must be 0 for PRO_MINI (ex GPS_PRO_MINI)
                                    // note: Now a GPS can share MSP on the same port. The only constrain is to not use it simultaneously, and use the same port speed.
 
@@ -680,7 +680,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
 
     
     //#define NMEA
-    //#define UBLOX
+    #define UBLOX
     //#define MTK_BINARY16
     //#define MTK_BINARY19
     //#define INIT_MTK_GPS        // initialize MTK GPS for using selected speed, 5Hz update rate and GGA & RMC sentence or binary settings
@@ -1046,7 +1046,7 @@ Also note, that maqgnetic declination changes with time, so recheck your value e
       SERVO7  = pin 7   (elevator for fixed wing)
       SERVO8  = pin 8   (motor for fixed wing)       */ 
 
-    #define MEGA_HW_PWM_SERVOS
+    //#define MEGA_HW_PWM_SERVOS
  
     /* HW PWM Servo outputs for 32u4 NanoWii, MicroWii etc. - works with either the variable SERVO_RFR_RATE or
      * one of the 3 fixed servo.refresh.rates *
