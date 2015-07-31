@@ -1520,10 +1520,10 @@ volatile unsigned long SONAR_GEP_echoTime = 0;
 volatile static int32_t  tempSonarAlt = 0;
 
 void Sonar_init() {
-	SONAR_GEP_EchoPin_PCICR;
-	SONAR_GEP_EchoPin_PCMSK;
-	SONAR_GEP_EchoPin_PINMODE_IN;
-	SONAR_GEP_TriggerPin_PINMODE_OUT;
+	SONAR_GEP_EchoPin_PCICR; //enable pin interrupts on D8-D13
+	SONAR_GEP_EchoPin_PCMSK; //mask everything except whatever SONAR_GEP_EchoPin_PCINT is, right now its PCINT5 or D11
+	SONAR_GEP_EchoPin_PINMODE_IN; //set in pin to INPUT
+	SONAR_GEP_TriggerPin_PINMODE_OUT; //set out pin to OUTPUT
 }
 
 void Sonar_update() {
