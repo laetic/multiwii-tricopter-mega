@@ -1,0 +1,3 @@
+ALT 13 0.100 80 seems to work pretty well, a bit slow on the draw though on SONAR/BARO
+
+SONAR alone appears to do absolutely nothing
