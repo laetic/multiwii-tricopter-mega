@@ -2020,7 +2020,7 @@
 #define SONAR_GEP_EchoPin                SONAR_GENERIC_ECHO_PIN
 #define SONAR_GEP_EchoPin_PINMODE_IN     pinMode(SONAR_GEP_EchoPin,INPUT);
 #define SONAR_GEP_EchoPin_PCINT          PCINT5
-#define PCICR |= (1<<PCIE0); // PCINT 0-7 belong to PCIE0 // this just enables D8-D13 to do pin change interrupts
+#define SONAR_GEP_EchoPin_PCICR          PCICR |= (1<<PCIE0); // PCINT 0-7 belong to PCIE0 // this just enables D8-D13 to do pin change interrupts
 #define SONAR_GEP_EchoPin_PCMSK          PCMSK0 = (1<<SONAR_GEP_EchoPin_PCINT); // Mask Pin PCINT5 - all other PIns PCINT0-7 are not allowed to create interrupts!
 #define SONAR_GEP_EchoPin_PCINT_vect     PCINT0_vect  // PCINT0-7 belog PCINT0_vect
 #define SONAR_GEP_EchoPin_PIN            PINB  // PCINT0-7 belong to PINB
