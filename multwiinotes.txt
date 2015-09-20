@@ -1,0 +1,15 @@
+Crawling through multiwii code
+
+9/20/15
+
+//Multiwii.cpp is money
+
+int16_t rcSerial[8];         // interval [1000;2000] - is rcData coming from MSP (multiwii serial protocol)
+int16_t rcCommand[4];        // interval [1000;2000] for THROTTLE and [-500;+500] for ROLL/PITCH/YAW
+
+//rcSticks is just for stick commands, not that relevant. 
+
+//we're using PID_CONTROLLER 1
+
+int16_t rc; //alright there's this cool int that's called rc
+enum rc { // and there's this friggin enum called rc. 
