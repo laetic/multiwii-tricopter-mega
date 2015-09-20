@@ -335,9 +335,9 @@ uint8_t getEstimatedAltitude(){
 
 #if BARO && !SONAR
 	alt.EstAlt = (alt.EstAlt * 6 + BaroAlt) >> 3; // additional LPF to reduce baro noise (faster by 30 µs)
-#elif SONAR && !BARO
+#elif SONAR && !BARO 
 	alt.EstAlt = alt.EstAlt * SONAR_BARO_LPF_LC + sonarAlt * (1 - SONAR_BARO_LPF_LC);
-#elif SONAR && BARO
+#elif SONAR && BARO //this is the one our mwii copter does.
 	// limit sonar altitude
 	/*if (sonarAlt > SONAR_MAX_HOLD) {
 	sonarAlt = SONAR_MAX_HOLD;
@@ -363,9 +363,11 @@ uint8_t getEstimatedAltitude(){
 	//alt.EstAlt = alt.EstAlt * SONAR_BARO_LPF_LC + sonarAlt * (1 - SONAR_BARO_LPF_LC); // SONAR
 #endif
 
+//#if SONAR && BARO
 	debug[0] = sonarAlt; // raw sonar altitude
 	debug[1] = BaroAlt; // barometer altitude
-	debug[2] = alt.EstAlt;
+	//debug[2] = alt.EstAlt;
+//#endif
 
 #if (defined(VARIOMETER) && (VARIOMETER != 2)) || !defined(SUPPRESS_BARO_ALTHOLD)
 	//P

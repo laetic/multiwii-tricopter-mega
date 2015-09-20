@@ -1,0 +1,6 @@
+ctrl + f roadmap
+
+BARO && !SONAR
+
+//this goes to where alt.EstAlt is updated
+
