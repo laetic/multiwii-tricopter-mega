@@ -1018,7 +1018,7 @@ Also note, that maqgnetic declination changes with time, so recheck your value e
   /**************************************************************************************/
     /* motors will not spin when the throttle command is in low position
        this is an alternative method to stop immediately the motors */
-    #define MOTOR_STOP
+    //#define MOTOR_STOP
 
     /* some radios have not a neutral point centered on 1500. can be changed here */
     #define MIDRC 1500
@@ -1210,12 +1210,12 @@ default pulse is PH6/12, echo is PB4/11
 #define SONAR_GENERIC_ECHO_PIN 11			// motor 11
 
 /************************* Sonar alt hold / precision / ground collision keeper *******/
-#define SONAR_MAX_HOLD 400					//cm, kind of error delimiter, for now to avoid rocket climbing, only usefull if no baro
+#define SONAR_MAX_HOLD 300					//cm, kind of error delimiter, for now to avoid rocket climbing, only usefull if no baro
 
 //if using baro + sonar       
-#define SONAR_BARO_FUSION_LC 100			//cm, baro/sonar readings fusion, low cut, below = full sonar
+#define SONAR_BARO_FUSION_LC 200			//cm, baro/sonar readings fusion, low cut, below = full sonar
 #define SONAR_BARO_FUSION_HC SONAR_MAX_HOLD //cm, baro/sonar readings fusion, high cut, above = full baro
-#define SONAR_BARO_FUSION_RATIO 0.0			//0.0-1.0,  baro/sonar readings fusion, amount of each sensor value, 0 = proportionnel between LC and HC
+#define SONAR_BARO_FUSION_RATIO 0			//0.0-1.0,  baro/sonar readings fusion, amount of each sensor value, 0 = proportionnel between LC and HC
 #define SONAR_BARO_LPF_LC 0.9f 
 #define SONAR_BARO_LPF_HC 0.9f
 #pragma endregion
