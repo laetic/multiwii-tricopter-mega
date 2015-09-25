@@ -1,15 +1,50 @@
 Crawling through multiwii code
 
-9/20/15
-
 //Multiwii.cpp is money
 
 int16_t rcSerial[8];         // interval [1000;2000] - is rcData coming from MSP (multiwii serial protocol)
 int16_t rcCommand[4];        // interval [1000;2000] for THROTTLE and [-500;+500] for ROLL/PITCH/YAW
 
-//rcSticks is just for stick commands, not that relevant. 
+//rcSticks is just for stick banging, not relevant here
 
 //we're using PID_CONTROLLER 1
 
 int16_t rc; //alright there's this cool int that's called rc
 enum rc { // and there's this friggin enum called rc. 
+
+
+//rcCommand is set by tmp for the most part
+
+rcCommand[axis] = lookupPitchRollRC[tmp2] + ((tmp-(tmp2<<7)) * (lookupPitchRollRC[tmp2+1]-lookupPitchRollRC[tmp2])>>7);
+
+	//lookupPitchRollRC is just for expos and w/e 
+
+tmp = min(abs(rcData[axis]-MIDRC),500);
+
+//tmp is set by rcData
+
+if ( rcDataMean < (uint16_t)rcData[chan] -3)  rcData[chan] = rcDataMean+2;
+
+//rcData is set by rcDataTmp set by readRawRC(chan), etc etc
+
+
+
+
+#pragma region GENERIC SONAR SUPPORT
+//the list of generic sonar defines, has some of the important code also
+
+#if defined(SONAR_GENERIC_ECHOPULSE)
+//the initialization and update of the sonar
+
+#define SONAR_GENERIC_ECHOPULSE 
+//the echo and trigger pin defines
+
+
+//the sonar works by sending out a pulse, starting a timer, 
+//reading when the pulse comes back, stopping the timer, 
+//and then uses time*SONAR_GENERIC_SCALE to turn the time into a distance
+
+void Sonar_init() { //make sure to not go to the i2c one
+
+//1. enable pin interrupts on the whole D8-D13 array, we only need interrupts on the echo. 
+2. 

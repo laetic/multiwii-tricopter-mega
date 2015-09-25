@@ -1536,10 +1536,12 @@ void Sonar_update() {
 }
 
 ISR(SONAR_GEP_EchoPin_PCINT_vect) {
-	if (SONAR_GEP_EchoPin_PIN & (1 << SONAR_GEP_EchoPin_PCINT)) {
+  //if >1 sensor check which pin is changed
+  
+	if (SONAR_GEP_EchoPin_PIN & (1 << SONAR_GEP_EchoPin_PCINT)) { // if(PINB & (1 << PCINT5), PINB is PCINT0-7 the (1 << PCINT5) is a mask for just PCINT5. 
 		SONAR_GEP_startTime = micros();
 	}
-	else {
+	else if (!SONAR_GEP_EchoPin_PIN & (1 << SONAR_GEP_EchoPin_PCINT)) {
 		SONAR_GEP_echoTime = micros() - SONAR_GEP_startTime;
 		if (SONAR_GEP_echoTime <= SONAR_GENERIC_MAX_RANGE*SONAR_GENERIC_SCALE)
 			tempSonarAlt = SONAR_GEP_echoTime / SONAR_GENERIC_SCALE;

@@ -4,3 +4,15 @@ BARO && !SONAR
 
 //this goes to where alt.EstAlt is updated
 
+if(axis!=2) { //ROLL & PITCH
+
+//this is where rcCommand is updated
+
+#pragma region GENERIC SONAR SUPPORT
+//the list of generic sonar defines, has some of the important code also
+
+#if defined(SONAR_GENERIC_ECHOPULSE)
+//the initialization and update of the sonar
+
+#define SONAR_GENERIC_ECHOPULSE 
+//the echo and trigger pin defines
